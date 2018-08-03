@@ -8,17 +8,18 @@ const REMOTE = process.env['GIT_REMOTE'] || 'tanajura';
 const APP_PATH = process.env['APP_PATH'] || '/app';
 
 const pullRepo = () => {
-  const repo = simpleGit(path.resolve(APP_PATH));
   try {
+    const repo = simpleGit(path.resolve(APP_PATH));
     repo.pull();
+    return true;
   } catch (err) {
     console.log(err);
+    return false;
   }
 }
 
 app.get('/pull', async (req, res) => {
-  pullRepo();
-  res.json({ ok: true });
+  res.json({ ok: pullRepo() });
 });
 
 app.listen(PORT, function () {
