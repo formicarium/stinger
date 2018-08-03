@@ -6,10 +6,10 @@ const { execFile } = require('child_process');
 const app = express();
 const execFileP = promisify(execFile);
 
-const PORT = process.env['STINGER_PORT'] || 3000;
-const REMOTE = process.env['GIT_REMOTE'] || 'tanajura';
+const STINGER_PORT = process.env['STINGER_PORT'] || 3000;
+const GIT_REMOTE = process.env['GIT_REMOTE'] || 'tanajura';
 const APP_PATH = process.env['APP_PATH'] || '/app';
-const SCRIPTS_PATH = process.env['STINGER_SCRIPTS'] || '/scripts';
+const STINGER_SCRIPTS = process.env['STINGER_SCRIPTS'] || '/scripts';
 
 const pullRepo = async () => {
   try {
@@ -24,7 +24,7 @@ const pullRepo = async () => {
 
 const restartProcess = async () => {
   try {
-    await execFileP(path.resolve(SCRIPTS_PATH, 'restart.sh'));
+    await execFileP(path.resolve(STINGER_SCRIPTS, 'restart.sh'));
     return true;
   } catch (err) {
     console.log(err);
@@ -34,7 +34,7 @@ const restartProcess = async () => {
 
 const stopProcess = async () => {
   try {
-    await execFileP(path.resolve(SCRIPTS_PATH, 'stop.sh'));
+    await execFileP(path.resolve(STINGER_SCRIPTS, 'stop.sh'));
     return true;
   } catch (err) {
     console.log(err);
@@ -44,7 +44,7 @@ const stopProcess = async () => {
 
 const startProcess = async () => {
   try {
-    await execFileP(path.resolve(SCRIPTS_PATH, 'start.sh'));
+    await execFileP(path.resolve(STINGER_SCRIPTS, 'start.sh'));
     return true;
   } catch (err) {
     console.log(err);
@@ -68,7 +68,7 @@ app.post('/start', async (req, res) => {
   res.json({ ok: await startProcess() });
 });
 
-app.listen(PORT, function () {
-  console.log(`Stinger is listening on port: ${PORT}`);
-  console.log(`APP_PATH: ${APP_PATH}\nREMOTE: ${REMOTE}\nSCRIPTS: ${SCRIPTS_PATH}`)
+app.listen(STINGER_PORT, function () {
+  console.log(`Stinger is listening on port: ${STINGER_PORT}`);
+  console.log(`APP_PATH: ${APP_PATH}\nREMOTE: ${GIT_REMOTE}\nSCRIPTS: ${STINGER_SCRIPTS}`)
 });
