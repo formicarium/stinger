@@ -1,5 +1,5 @@
 const express = require('express');
-const simpleGit = require('simple-git');
+const simpleGit = require('simple-git/promise');
 const path = require("path");
 const { promisify } = require('util');
 const { execFile } = require('child_process');
@@ -11,10 +11,10 @@ const REMOTE = process.env['GIT_REMOTE'] || 'tanajura';
 const APP_PATH = process.env['APP_PATH'] || '/app';
 const SCRIPTS_PATH = process.env['STINGER_SCRIPTS'] || '/scripts';
 
-const pullRepo = () => {
+const pullRepo = async () => {
   try {
-    const repo = simpleGit(path.resolve(APP_PATH));
-    repo.pull();
+    const repo = await simpleGit(path.resolve(APP_PATH));
+    await repo.pull()
     return true;
   } catch (err) {
     console.log(err);
@@ -53,7 +53,7 @@ const startProcess = async () => {
 }
 
 app.post('/pull', async (req, res) => {
-  res.json({ ok: pullRepo() });
+  res.json({ ok: await pullRepo() });
 });
 
 app.post('/restart', async (req, res) => {
