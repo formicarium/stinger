@@ -6,8 +6,14 @@
   "repository": "https://github.com/formicarium/stinger",
   "author": "Formicarium",
   "license": "MIT",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
   "dependencies": {
     "express": "^4.16.3",
-    "nodegit": "^0.22.2"
+    "simple-git": "^1.96.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.3"
   }
 }
