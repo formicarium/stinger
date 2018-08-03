@@ -1,0 +1,13 @@
+{
+  "name": "stinger",
+  "version": "1.0.0",
+  "description": "Service Companion API",
+  "main": "index.js",
+  "repository": "https://github.com/formicarium/stinger",
+  "author": "Formicarium",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.3",
+    "nodegit": "^0.22.2"
+  }
+}
