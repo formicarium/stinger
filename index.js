@@ -1,4 +1,6 @@
 const express = require('express');
+const fs = require('fs');
+const del = require('del');
 const simpleGit = require('simple-git/promise');
 const path = require("path");
 const { promisify } = require('util');
@@ -7,13 +9,27 @@ const app = express();
 const execFileP = promisify(execFile);
 
 const STINGER_PORT = process.env['STINGER_PORT'] || 3000;
-const GIT_REMOTE = process.env['GIT_REMOTE'] || 'tanajura';
-const APP_PATH = process.env['APP_PATH'] || '/app';
+const APP_PATH = path.resolve(process.env['APP_PATH'] || '/app');
 const STINGER_SCRIPTS = process.env['STINGER_SCRIPTS'] || '/scripts';
+const GIT_URI = process.env['GIT_URI'] || `http://git.${process.env['DEVSPACE']}/${process.env['SERVICE']}`
+
+const cloneRepo = async(deleteExisting = true) => {
+  try {
+    if (deleteExisting && await promisify(fs.exists)(`${APP_PATH}/.git`)) {
+      await del(APP_PATH, { force: true })
+    }
+    const repo = await simpleGit();
+    await repo.clone(GIT_URI, APP_PATH);
+    return true;
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+}
 
 const pullRepo = async () => {
   try {
-    const repo = await simpleGit(path.resolve(APP_PATH));
+    const repo = await simpleGit(APP_PATH);
     await repo.pull()
     return true;
   } catch (err) {
@@ -60,6 +76,14 @@ app.post('/pull', async (req, res) => {
   }
 });
 
+app.post('/clone', async (req, res) => {
+  if (await cloneRepo()) {
+    res.json({ ok: true }).status(201)
+  } else {
+    res.json({ ok: false }).status(500)
+  }
+});
+
 app.post('/restart', async (req, res) => {
   if (await restartProcess()) {
     res.json({ ok: true }).status(202);
@@ -84,7 +108,12 @@ app.post('/start', async (req, res) => {
   }
 });
 
-app.listen(STINGER_PORT, function () {
+app.listen(STINGER_PORT, async () => {
   console.log(`Stinger is listening on port: ${STINGER_PORT}`);
-  console.log(`APP_PATH: ${APP_PATH}\nREMOTE: ${GIT_REMOTE}\nSCRIPTS: ${STINGER_SCRIPTS}`)
+  console.log(`APP_PATH: ${APP_PATH}\nGIT: ${GIT_URI}\nSCRIPTS: ${STINGER_SCRIPTS}`)
+  if (process.env['STARTUP_CLONE'] === 'true') {
+    console.log(`Cloning Initial Version...`)
+    await cloneRepo(false);
+  }
+  console.log('READY')
 });
