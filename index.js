@@ -53,19 +53,35 @@ const startProcess = async () => {
 }
 
 app.post('/pull', async (req, res) => {
-  res.json({ ok: await pullRepo() });
+  if (await pullRepo()) {
+    res.json({ ok: true }).status(202);
+  } else {
+    res.json({ ok: false }).status(500);
+  }
 });
 
 app.post('/restart', async (req, res) => {
-  res.json({ ok: await restartProcess() });
+  if (await restartProcess()) {
+    res.json({ ok: true }).status(202);
+  } else {
+    res.json({ ok: false }).status(500);
+  }
 });
 
 app.post('/stop', async (req, res) => {
-  res.json({ ok: await stopProcess() });
+  if (await stopProcess()) {
+    res.json({ ok: true }).status(202);
+  } else {
+    res.json({ ok: false }).status(500);
+  }
 });
 
 app.post('/start', async (req, res) => {
-  res.json({ ok: await startProcess() });
+  if (await startProcess()) {
+    res.json({ ok: true }).status(202);
+  } else {
+    res.json({ ok: false }).status(500);
+  }
 });
 
 app.listen(STINGER_PORT, function () {
