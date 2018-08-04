@@ -13,7 +13,7 @@ const APP_PATH = path.resolve(process.env['APP_PATH'] || '/app');
 const STINGER_SCRIPTS = process.env['STINGER_SCRIPTS'] || '/scripts';
 const GIT_URI = process.env['GIT_URI'] || `http://git.${process.env['DEVSPACE']}/${process.env['SERVICE']}`
 
-const cloneRepo = async(deleteExisting = true) => {
+const cloneRepo = async (deleteExisting = true) => {
   try {
     if (deleteExisting && await promisify(fs.exists)(`${APP_PATH}/.git`)) {
       await del(APP_PATH, { force: true })
