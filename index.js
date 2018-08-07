@@ -4,7 +4,7 @@ const del = require('del');
 const simpleGit = require('simple-git/promise');
 const path = require("path");
 const { promisify } = require('util');
-const { execFile, spawn } = require('child_process');
+const { spawn } = require('child_process');
 const app = express();
 
 const STINGER_PORT = process.env['STINGER_PORT'] || 3000;
