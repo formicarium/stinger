@@ -4,7 +4,7 @@ const del = require('del');
 const simpleGit = require('simple-git/promise');
 const path = require("path");
 const { promisify } = require('util');
-const { execFile } = require('child_process');
+const { execFile, spawn } = require('child_process');
 const app = express();
 const execFileP = promisify(execFile);
 
@@ -38,9 +38,12 @@ const pullRepo = async () => {
   }
 }
 
-const restartProcess = async () => {
+const runScript = async (script) => {
   try {
-    await execFileP(path.resolve(STINGER_SCRIPTS, 'restart.sh'));
+    const file = path.resolve(STINGER_SCRIPTS, script)
+    const childProcess = spawn(file, [], {
+      stdio: [process.stdin, process.stdout, process.stderr]
+    })
     return true;
   } catch (err) {
     console.log(err);
@@ -48,25 +51,9 @@ const restartProcess = async () => {
   }
 }
 
-const stopProcess = async () => {
-  try {
-    await execFileP(path.resolve(STINGER_SCRIPTS, 'stop.sh'));
-    return true;
-  } catch (err) {
-    console.log(err);
-    return false;
-  }
-}
-
-const startProcess = async () => {
-  try {
-    await execFileP(path.resolve(STINGER_SCRIPTS, 'start.sh'));
-    return true;
-  } catch (err) {
-    console.log(err);
-    return false;
-  }
-}
+const restartProcess = () => runScript('restart.sh')
+const stopProcess = () => runScript('stop.sh')
+const startProcess = () => runScript('start.sh')
 
 app.post('/pull', async (req, res) => {
   if (await pullRepo()) {
