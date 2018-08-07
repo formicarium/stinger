@@ -10,7 +10,7 @@
     "stinger": "index.js"
   },
   "scripts": {
-    "start": "start index.js",
+    "start": "node index.js",
     "dev": "env-cmd config/.dev.env nodemon index.js"
   },
   "dependencies": {
