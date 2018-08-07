@@ -14,9 +14,11 @@
     "dev": "env-cmd config/.dev.env nodemon index.js"
   },
   "dependencies": {
+    "body-parser": "^1.18.3",
     "del": "^3.0.0",
     "express": "^4.16.3",
-    "simple-git": "^1.96.0"
+    "simple-git": "^1.96.0",
+    "terminate": "^2.1.0"
   },
   "devDependencies": {
     "env-cmd": "^8.0.2",
