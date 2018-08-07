@@ -4,8 +4,10 @@ const terminate = require('terminate')
 const kill = promisify(terminate)
 
 class ProcessManager {
-  constructor() {
+  constructor(path, pArgs) {
     this.process = null
+    this.path = path
+    this.pArgs = pArgs
   }
   registerProcess(process) {
     this.process = process
@@ -15,10 +17,12 @@ class ProcessManager {
     return this.process
   }
 
-  async startProcess(path, args) {
-    console.log('Starting process...')
+  async startProcess() {
+    await this.killProcess()
+    console.log('Starting process!')
+    console.log(`${this.path} ${(this.pArgs || []).join(' ')}`)
     try {
-      const childProcess = spawn(path, args, {
+      const childProcess = spawn(this.path, this.pArgs || [], {
         stdio: [process.stdin, process.stdout, process.stderr]
       })
       this.registerProcess(childProcess)
@@ -46,7 +50,6 @@ class ProcessManager {
   }
 }
 
-const processManager = new ProcessManager()
 module.exports = {
-  processManager
+  ProcessManager,
 }
