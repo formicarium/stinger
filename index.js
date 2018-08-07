@@ -6,7 +6,6 @@ const path = require("path");
 const { promisify } = require('util');
 const { execFile, spawn } = require('child_process');
 const app = express();
-const execFileP = promisify(execFile);
 
 const STINGER_PORT = process.env['STINGER_PORT'] || 3000;
 const APP_PATH = path.resolve(process.env['APP_PATH'] || '/app');
