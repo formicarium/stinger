@@ -6,6 +6,9 @@
   "repository": "https://github.com/formicarium/stinger",
   "author": "Formicarium",
   "license": "MIT",
+  "bin": {
+    "stinger": "index.js"
+  },
   "scripts": {
     "start": "start index.js",
     "dev": "env-cmd config/.dev.env nodemon index.js"
