@@ -1,4 +1,7 @@
-cd /tmp/remote/svc1
+cd /tmp/config-server-example
+
+echo $APP_PATH
+
 lein run-dev
 
 # echo "hello from script"

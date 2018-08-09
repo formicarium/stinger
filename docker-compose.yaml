@@ -1,0 +1,15 @@
+version: '3'
+services:
+  stinger:
+    image: formicarium/chamber-lein:0.0.6
+    ports:
+     - "24000:24000"
+    environment:
+    - STINGER_PORT=24000
+    - APP_PATH=/app
+    - STINGER_SCRIPTS=./scripts
+    - GIT_URI=https://github.com/formicarium/config-server-example
+    - STARTUP_CLONE=true
+    volumes:
+      - /Users/rafaeleal/.m2:/root/.m2
+    
