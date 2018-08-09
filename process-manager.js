@@ -1,7 +1,15 @@
 const { spawn } = require('child_process');
-const { promisify } = require('util');
-const terminate = require('terminate')
-const { exec } = require('node-exec-promise');
+var treeKill = require('tree-kill');
+
+
+const kill = (pid) => new Promise((resolve, reject) => {
+  treeKill(pid, (err) => {
+    if (err) {
+      return reject(err)
+    }
+    resolve()
+  })
+})
 
 class ProcessManager {
   constructor(path, pArgs) {
@@ -42,7 +50,7 @@ class ProcessManager {
     if (process) {
       console.log(`${process.pid}`)
       try {
-        await exec(`kill -- -${process.pid}`)
+        await kill(process.pid)
       } catch (err) {
         console.log(err)
       }
