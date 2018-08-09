@@ -1,7 +1,7 @@
 const { spawn } = require('child_process');
 const { promisify } = require('util');
 const terminate = require('terminate')
-const kill = promisify(terminate)
+const { exec } = require('node-exec-promise');
 
 class ProcessManager {
   constructor(path, pArgs) {
@@ -42,7 +42,7 @@ class ProcessManager {
     if (process) {
       console.log(`${process.pid}`)
       try {
-        await kill(process.pid)
+        await exec(`kill ${process.pid}`)
       } catch (err) {
         console.log(err)
       }
