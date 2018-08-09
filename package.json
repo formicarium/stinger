@@ -1,5 +1,8 @@
 {
-  "name": "stinger",
+  "name": "@formicarium/stinger",
+  "publishConfig": {
+    "access": "public"
+  },
   "version": "1.0.1",
   "description": "Service Companion API",
   "main": "index.js",

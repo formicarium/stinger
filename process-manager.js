@@ -40,7 +40,13 @@ class ProcessManager {
     console.log('Trying to kill process...')
     const process = this.getProcess()
     if (process) {
-      await kill(process.pid)
+      console.log(`${process.pid}`)
+      try {
+        await kill(process.pid)
+      } catch (err) {
+        console.log(err)
+      }
+      
       this.process = null
       console.log('Process was killed')
       return true
