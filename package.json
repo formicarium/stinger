@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "1.1.0",
+  "version": "1.3.2",
   "description": "Service Companion API",
   "main": "index.js",
   "repository": "https://github.com/formicarium/stinger",
@@ -25,7 +25,8 @@
     "fs-extra": "^7.0.0",
     "node-exec-promise": "^1.0.2",
     "simple-git": "^1.96.0",
-    "terminate": "^2.1.0"
+    "terminate": "^2.1.0",
+    "tree-kill": "^1.2.0"
   },
   "devDependencies": {
     "env-cmd": "^8.0.2",
