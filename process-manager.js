@@ -42,7 +42,7 @@ class ProcessManager {
     if (process) {
       console.log(`${process.pid}`)
       try {
-        await exec(`kill ${process.pid}`)
+        await exec(`kill -- -${process.pid}`)
       } catch (err) {
         console.log(err)
       }
