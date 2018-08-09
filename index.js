@@ -110,6 +110,13 @@ app.post('/start', asyncHandler(async (req, res) => {
   res.json({ ok: true }).status(202);
 }))
 
+
+app.get('/health', asyncHandler(async (req, res) => {
+  console.log('olá')
+  res.json({
+    health: 'ok'
+  })
+}))
 /**
  * Express error handling
  */
