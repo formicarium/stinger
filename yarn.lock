@@ -1157,6 +1157,10 @@ nice-try@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/nice-try/-/nice-try-1.0.4.tgz#d93962f6c52f2c1558c0fbda6d512819f1efe1c4"
 
+node-exec-promise@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/node-exec-promise/-/node-exec-promise-1.0.2.tgz#269e8512384d3f11256561e7c624b3ebf57a9ecf"
+
 node-pre-gyp@^0.10.0:
   version "0.10.3"
   resolved "https://registry.yarnpkg.com/node-pre-gyp/-/node-pre-gyp-0.10.3.tgz#3070040716afdc778747b61b6887bf78880b80fc"
