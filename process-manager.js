@@ -12,10 +12,12 @@ const kill = (pid) => new Promise((resolve, reject) => {
 })
 
 class ProcessManager {
-  constructor(path, pArgs) {
+  constructor(path, pArgs = [], cwd, cleanupScript) {
     this.process = null
     this.path = path
     this.pArgs = pArgs
+    this.cwd = cwd
+    this.cleanupScript = cleanupScript
   }
   registerProcess(process) {
     this.process = process
@@ -27,18 +29,18 @@ class ProcessManager {
 
   async startProcess() {
     await this.killProcess()
-    console.log('Starting process!')
-    console.log(`${this.path} ${(this.pArgs || []).join(' ')}`)
+    console.log(`Starting process: ${this.path} ${(this.pArgs || []).join(' ')}`)
     try {
       const childProcess = spawn(this.path, this.pArgs || [], {
-        stdio: [process.stdin, process.stdout, process.stderr]
+        stdio: [process.stdin, process.stdout, process.stderr],
+        cwd: this.cwd
       })
       this.registerProcess(childProcess)
       console.log('Process started!')
       return true
     } catch (err) {
       console.log('No process was started')
-
+      console.log(err)
       return false
     }
     
@@ -48,18 +50,25 @@ class ProcessManager {
     console.log('Trying to kill process...')
     const process = this.getProcess()
     if (process) {
-      console.log(`${process.pid}`)
-      try {
-        await kill(process.pid)
-        await exec('killall java').catch((err) => {
-          console.log('Could not killall java')
-        })
-      } catch (err) {
+      console.log(`PID: ${process.pid}`)
+      await kill(process.pid)
+      .catch((err) => {
+        console.log('Error killing process tree')
         console.log(err)
-      }
+      })
+      .then(() => {
+        console.log('Process tree was killed')
+      })
+      await exec(cleanupScript)
+      .catch((err) => {
+        console.log('Error running cleanup script')
+        console.log(err)
+      })
+      .then(() => {
+        console.log('Cleanup script was run')
+      })
       
       this.process = null
-      console.log('Process was killed')
       return true
     }
     console.log('No process was killed')

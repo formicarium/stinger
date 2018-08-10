@@ -6,7 +6,6 @@ const { ProcessManager } = require('./process-manager')
 const { GitManager } = require('./git-manager')
 const bodyParser = require('body-parser')
 const { asyncHandler } = require('./common')
-const { spawn } = require('child_process')
 
 /**
  * Consts
@@ -15,7 +14,9 @@ const STINGER_PORT = process.env['STINGER_PORT'] || 3000;
 const APP_PATH = path.resolve(process.env['APP_PATH'] || '/app');
 const STINGER_SCRIPTS = process.env['STINGER_SCRIPTS'] || '/scripts';
 const GIT_URI = process.env['GIT_URI'] || `http://git.${process.env['DEVSPACE']}/${process.env['SERVICE']}`
+const START_AFTER_PULL = process.env['START_AFTER_PULL'] || true
 const startScript = path.resolve(STINGER_SCRIPTS, 'start.sh')
+const cleanupScript = path.resolve(STINGER_SCRIPTS, 'cleanup.sh')
 
 /**
  * Express
@@ -28,7 +29,7 @@ app.use(bodyParser.json())
  * Managers
  */
 const gitManager = new GitManager(APP_PATH, GIT_URI)
-const processManager = new ProcessManager(startScript)
+const processManager = new ProcessManager(startScript, [], APP_PATH, cleanupScript)
 
 /**
  * Controllers
@@ -87,7 +88,7 @@ app.post('/pull', asyncHandler(async (req, res) => {
     restartAfterPull = false,
   } = req.body
 
-  await pullRepo(restartAfterPull)
+  await pullRepo(START_AFTER_PULL || restartAfterPull)
   res.json({ ok: true }).status(202);
 }))
 
@@ -132,7 +133,11 @@ app.use((err, req, res, next) => {
 
 app.listen(STINGER_PORT, async () => {
   console.log(`Stinger is listening on port: ${STINGER_PORT}`);
-  console.log(`APP_PATH: ${APP_PATH}\nGIT: ${GIT_URI}\nSCRIPTS: ${STINGER_SCRIPTS}`)
+  console.log(`APP_PATH: ${APP_PATH}`)
+  console.log(`STINGER_SCRIPTS: ${STINGER_SCRIPTS}`)
+  console.log(`GIT_URI: ${GIT_URI}`)
+  console.log(`START_AFTER_PULL: ${START_AFTER_PULL}`)
+
   if (process.env['STARTUP_CLONE'] === 'true') {
     if (await gitManager.repoExists()) {
       console.log('Repo already presented. Skipping initial clone')
@@ -141,6 +146,6 @@ app.listen(STINGER_PORT, async () => {
       await gitManager.clone()
     }
   }
-  console.log('READY')
+  await processManager.startProcess()
 });
 
