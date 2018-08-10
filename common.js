@@ -4,6 +4,12 @@ const asyncHandler = (fn) =>
       .catch(next)
   }
 
-module.exports = {
-  asyncHandler
+const log = (...what) => {
+  console.log(`[${new Date().toLocaleString()}] `, ...what)
 }
+
+module.exports = {
+  asyncHandler,
+  log
+}
+
