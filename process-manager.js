@@ -2,6 +2,7 @@ const { spawn } = require('child_process');
 var treeKill = require('tree-kill');
 const { exec } = require('node-exec-promise');
 const { log } = require('./common')
+const fs = require('fs-extra')
 
 const kill = (pid) => new Promise((resolve, reject) => {
   treeKill(pid, (err) => {
@@ -60,17 +61,22 @@ class ProcessManager {
       .then(() => {
         log('Process tree was killed')
       })
-      await exec(this.cleanupScript, {
-        cwd: this.cwd,
-      })
-      .catch((err) => {
-        log('Error running cleanup script')
-        log(err)
-      })
-      .then(() => {
-        log('Cleanup script was run')
-      })
-      
+      if (await fs.pathExistsSync(this.cleanupScript)) {
+        log(`Running cleanup script: ${this.cleanupScript}`)
+        await exec(this.cleanupScript, {
+          cwd: this.cwd,
+        })
+        .catch((err) => {
+          log('Error running cleanup script')
+          log(err)
+        })
+        .then((program) => {
+          log('Cleanup script was run')
+          log(program.stdout)
+        })
+      } else {
+        log(`No cleanup script found at ${this.cleanupScript}`)
+      }
       this.process = null
       return true
     }
