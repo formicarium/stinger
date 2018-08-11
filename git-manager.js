@@ -11,7 +11,7 @@ class GitManager {
   async clone() {
     console.log('Trying to clone repo')
     const repo = await simpleGit();
-    const clone = await repo.clone(this.remoteUrl, this.baseFolder);
+    const clone = await repo.clone(this.remoteUrl, this.baseFolder, ['-b', 'tanajura']);
     console.log('Repo was cloned')
     return clone
   }
@@ -19,7 +19,7 @@ class GitManager {
   async pull() {
     console.log('Pulling repo...')
     const repo = await simpleGit(this.baseFolder);
-    const pull = await repo.pull()
+    const pull = await repo.pull('origin', 'tanajura')
     console.log('Pull success')  
     return pull
   }
