@@ -1,4 +1,4 @@
 #!/bin/bash
 
-yarn
-yarn start
+
+yes > /dev/null
