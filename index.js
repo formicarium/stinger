@@ -7,6 +7,7 @@ const { GitManager } = require('./git-manager')
 const bodyParser = require('body-parser')
 const { asyncHandler } = require('./common')
 
+const getBoolFromString = (str) => str.toLowerCase() === 'true'
 /**
  * Consts
  */
@@ -14,7 +15,7 @@ const STINGER_PORT = process.env['STINGER_PORT'] || 3000;
 const APP_PATH = path.resolve(process.env['APP_PATH'] || '/app');
 const STINGER_SCRIPTS = process.env['STINGER_SCRIPTS'] || '/scripts';
 const GIT_URI = process.env['GIT_URI'] || `http://git.${process.env['DEVSPACE']}/${process.env['SERVICE']}`
-const START_AFTER_PULL = process.env['START_AFTER_PULL'] || true
+const START_AFTER_PULL = process.env['START_AFTER_PULL'] ? getBoolFromString(process.env['START_AFTER_PULL']) : false
 const startScript = path.resolve(STINGER_SCRIPTS, 'start.sh')
 const cleanupScript = path.resolve(STINGER_SCRIPTS, 'cleanup.sh')
 const BRANCH = process.env['BRANCH'] || 'tanajura'
