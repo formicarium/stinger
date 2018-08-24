@@ -17,6 +17,7 @@ const GIT_URI = process.env['GIT_URI'] || `http://git.${process.env['DEVSPACE']}
 const START_AFTER_PULL = process.env['START_AFTER_PULL'] || true
 const startScript = path.resolve(STINGER_SCRIPTS, 'start.sh')
 const cleanupScript = path.resolve(STINGER_SCRIPTS, 'cleanup.sh')
+const BRANCH = process.env['BRANCH'] || 'tanajura'
 
 /**
  * Express
@@ -28,7 +29,7 @@ app.use(bodyParser.json())
 /**
  * Managers
  */
-const gitManager = new GitManager(APP_PATH, GIT_URI)
+const gitManager = new GitManager(APP_PATH, GIT_URI, BRANCH)
 const processManager = new ProcessManager(startScript, [], APP_PATH, cleanupScript)
 
 /**
@@ -81,8 +82,31 @@ const pullRepo = async (restartAfterPull) => {
 }
 
 /**
+ * resetRepo
+ * @param {boolean} restartAfterReset 
+ */
+const resetRepo = async (restartAfterReset) => {
+  await gitManager.fetch()
+  await gitManager.resetHard()
+  if (restartAfterReset) {
+    await processManager.startProcess()
+  }
+  
+  return true; 
+}
+
+/**
  * HTTP Handlers
  */
+app.post('/reset', asyncHandler(async (req, res) => {
+  const {
+    restart = false,
+  } = req.body
+
+  await resetRepo(START_AFTER_PULL || restart)
+  res.json({ ok: true }).status(200);
+}))
+
 app.post('/pull', asyncHandler(async (req, res) => {
   const {
     restartAfterPull = false,
