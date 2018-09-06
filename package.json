@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "1.5.1",
+  "version": "1.5.3",
   "description": "Service Companion API",
   "main": "index.js",
   "repository": "https://github.com/formicarium/stinger",
