@@ -15,7 +15,7 @@ const STINGER_PORT = process.env['STINGER_PORT'] || 3000;
 const APP_PATH = path.resolve(process.env['APP_PATH'] || '/app');
 const STINGER_SCRIPTS = process.env['STINGER_SCRIPTS'] || '/scripts';
 const GIT_URI = process.env['GIT_URI'] || `http://git.${process.env['DEVSPACE']}/${process.env['SERVICE']}`
-const START_AFTER_PULL = process.env['START_AFTER_PULL'] ? getBoolFromString(process.env['START_AFTER_PULL']) : false
+const START_AFTER_PULL = process.env['START_AFTER_PULL_2'] ? getBoolFromString(process.env['START_AFTER_PULL_2']) : false
 const startScript = path.resolve(STINGER_SCRIPTS, 'start.sh')
 const cleanupScript = path.resolve(STINGER_SCRIPTS, 'cleanup.sh')
 const BRANCH = process.env['BRANCH'] || 'tanajura'
@@ -113,7 +113,7 @@ app.post('/pull', asyncHandler(async (req, res) => {
     restartAfterPull = false,
   } = req.body
 
-  await pullRepo(START_AFTER_PULL || restartAfterPull)
+  await resetRepo(START_AFTER_PULL || restartAfterPull)
   res.json({ ok: true }).status(202);
 }))
 
